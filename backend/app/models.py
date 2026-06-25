@@ -8,6 +8,11 @@ class UserCreate(BaseModel):
     email: str
     senha: str
 
+# LOGIN
+class UserLogin(BaseModel):
+    email: str
+    senha: str
+
 # TRANSAÇÃO
 class TransactionCreate(BaseModel):
     tipo: str  # "receita" ou "gasto"
@@ -25,5 +30,5 @@ class CategoryCreate(BaseModel):
 class BudgetCreate(BaseModel):
     categoria: str
     limite_mensal: float
-    mes: int   # 1-12
+    mes: int  # 1-12
     ano: int

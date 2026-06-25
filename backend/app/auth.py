@@ -1,40 +1,28 @@
-from datetime import datetime, timedelta
-from jose import JWTError, jwt
-from passlib.context import CryptContext
-from fastapi import Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer
-import os
+from fastapi import APIRouter, HTTPException, status
+from app.database import db
+from app.models import UserCreate, UserLogin
+from app.auth import hash_senha, verificar_senha, criar_token
 
-SECRET_KEY = os.getenv("SECRET_KEY", "troque-essa-chave-no-env")
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+router = APIRouter(prefix="/auth", tags=["auth"])
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
+@router.post("/register", status_code=status.HTTP_201_CREATED)
+async def register(user: UserCreate):
+    existe = await db["usuarios"].find_one({"email": user.email})
+    if existe:
+        raise HTTPException(status_code=400, detail="Email já cadastrado")
 
-def hash_senha(senha: str) -> str:
-    return pwd_context.hash(senha)
+    novo_usuario = {
+        "nome": user.nome,
+        "email": user.email,
+        "senha": hash_senha(user.senha)
+    }
+    await db["usuarios"].insert_one(novo_usuario)
+    return {"mensagem": "Usuário criado com sucesso"}
 
-def verificar_senha(senha: str, hash: str) -> bool:
-    return pwd_context.verify(senha, hash)
-
-def criar_token(data: dict) -> str:
-    payload = data.copy()
-    expiracao = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    payload.update({"exp": expiracao})
-    return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
-
-def verificar_token(token: str = Depends(oauth2_scheme)) -> str:
-    erro = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Token inválido ou expirado",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        email: str = payload.get("sub")
-        if email is None:
-            raise erro
-        return email
-    except JWTError:
-        raise erro
+@router.post("/login")
+async def login(user: UserLogin):
+    usuario = await db["usuarios"].find_one({"email": user.email})
+    if not usuario or not verificar_senha(user.senha, usuario["senha"]):
+        raise HTTPException(status_code=401, detail="Email ou senha incorretos")
+    token = criar_token({"sub": usuario["email"]})
+    return {"access_token": token, "token_type": "bearer"}
