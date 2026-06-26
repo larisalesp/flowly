@@ -2,7 +2,7 @@ from passlib.context import CryptContext
 from jose import jwt
 from datetime import datetime, timedelta
 from fastapi import Depends, HTTPException
-from fastapi.security import OAuth2PasswordBearer
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 import os
 from dotenv import load_dotenv
 
@@ -13,7 +13,7 @@ ALGORITHM = "HS256"
 EXPIRACAO_MINUTOS = 30
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
+oauth2_scheme = HTTPBearer()
 
 def hash_senha(senha: str) -> str:
     return pwd_context.hash(senha)
@@ -27,9 +27,9 @@ def criar_token(dados: dict) -> str:
     dados_copia.update({"exp": expiracao})
     return jwt.encode(dados_copia, SECRET_KEY, algorithm=ALGORITHM)
 
-def verificar_token(token: str = Depends(oauth2_scheme)):
+def verificar_token(credentials: HTTPAuthorizationCredentials = Depends(oauth2_scheme)):
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        payload = jwt.decode(credentials.credentials, SECRET_KEY, algorithms=[ALGORITHM])
         email = payload.get("sub")
         if not email:
             raise HTTPException(status_code=401, detail="Token inválido")
