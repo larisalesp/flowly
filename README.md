@@ -39,13 +39,11 @@ A motivação foi entender para onde o dinheiro vai e ter mais controle sobre as
 - Tailwind CSS
 
 ## ‎❥ Estrutura do Projeto:
-flowly/
-├── backend/
-│   ├── app/
-│   │   ├── routers/
-│   │   ├── models.py
-│   │   ├── auth.py
-│   │   ├── database.py
-│   │   └── main.py
-│   └── venv/
-└── frontend/
+
+- `backend/` — API FastAPI
+  - `app/routers/` — rotas
+  - `app/models.py` — modelos Pydantic
+  - `app/auth.py` — autenticação JWT
+  - `app/database.py` — conexão MongoDB
+  - `app/main.py` — entrada da aplicação
+- `frontend/` — interface React
