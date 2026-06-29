@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
+from typing import Optional
 from app.models import TransactionCreate
 from app.database import db
 from app.auth import verificar_token
@@ -20,9 +21,28 @@ async def criar_transacao(dados: TransactionCreate, usuario=Depends(verificar_to
     return {"id": str(resultado.inserted_id), "mensagem": "Transação criada!"}
 
 @router.get("/")
-async def listar_transacoes(usuario=Depends(verificar_token)):
+async def listar_transacoes(
+    tipo: Optional[str] = None,
+    categoria: Optional[str] = None,
+    data_inicio: Optional[datetime] = None,
+    data_fim: Optional[datetime] = None,
+    usuario=Depends(verificar_token)
+):
+    filtro = {"usuario_id": usuario["id"]}
+
+    if tipo:
+        filtro["tipo"] = tipo
+    if categoria:
+        filtro["categoria"] = categoria
+    if data_inicio or data_fim:
+        filtro["data"] = {}
+        if data_inicio:
+            filtro["data"]["$gte"] = data_inicio
+        if data_fim:
+            filtro["data"]["$lte"] = data_fim
+
     transacoes = []
-    async for t in db.transactions.find({"usuario_id": usuario["id"]}):
+    async for t in db.transactions.find(filtro):
         transacoes.append(formatar(t))
     return transacoes
 
