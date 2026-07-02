@@ -8,6 +8,9 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+  server: {
+    host: true
+  },
   resolve: {
     alias: {
       'react': path.resolve('./node_modules/react'),

@@ -1,5 +1,7 @@
 import { useState } from 'react'
 
+const API = 'http://192.168.0.20:8000'
+
 function Login() {
   const [email, setEmail] = useState('')
   const [senha, setSenha] = useState('')
@@ -8,7 +10,7 @@ function Login() {
   async function handleLogin() {
     setErro('')
     try {
-      const res = await fetch('http://localhost:8000/auth/login', {
+      const res = await fetch(`${API}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, senha })

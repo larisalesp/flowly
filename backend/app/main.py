@@ -11,11 +11,15 @@ from app.routers.goals import router as goals_router
 app = FastAPI(title="Flowly")
 
 app.add_middleware(
-   CORSMiddleware,
-   allow_origins=["http://localhost:5173", "http://localhost:5174"],
-   allow_credentials=True,
-   allow_methods=["*"],
-   allow_headers=["*"],
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+        "http://localhost:5174",
+        "http://192.168.0.20:5173",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 app.include_router(auth_router)
@@ -27,12 +31,12 @@ app.include_router(goals_router)
 
 @app.get("/health")
 async def health():
-   return {"status": "ok"}
+    return {"status": "ok"}
 
 @app.get("/health/db")
 async def health_db():
-   try:
-       await db.command("ping")
-       return {"status": "ok", "mongo": "conectado"}
-   except Exception as e:
-       return {"status": "erro", "detalhe": str(e)}
+    try:
+        await db.command("ping")
+        return {"status": "ok", "mongo": "conectado"}
+    except Exception as e:
+        return {"status": "erro", "detalhe": str(e)}
