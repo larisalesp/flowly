@@ -1,4 +1,4 @@
-import { Home, Target, BarChart2 } from 'lucide-react'
+import { Home, ArrowLeftRight, Target, BarChart2 } from 'lucide-react'
 
 function BottomNav() {
   const path = window.location.pathname
@@ -9,6 +9,7 @@ function BottomNav() {
 
   const itens = [
     { rota: '/dashboard', icone: Home, label: 'Início' },
+    { rota: '/transacoes', icone: ArrowLeftRight, label: 'Transações' },
     { rota: '/orcamentos', icone: Target, label: 'Orçamentos' },
     { rota: '/relatorios', icone: BarChart2, label: 'Relatórios' },
   ]
