@@ -17,6 +17,7 @@ app.add_middleware(
         "http://localhost:5174",
         "http://192.168.0.20:5173",
         "https://flowly-qklbmebhc-larissa25.vercel.app",
+        "https://flowly-git-main-larissa25.vercel.app",
     ],
     allow_credentials=True,
     allow_methods=["*"],
