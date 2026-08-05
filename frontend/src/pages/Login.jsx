@@ -1,3 +1,4 @@
+cat > ~/flowly/frontend/src/pages/Login.jsx << 'EOF'
 import { useState } from 'react'
 
 const API = 'https://flowly-production-aef8.up.railway.app'
@@ -71,3 +72,66 @@ function Login() {
         )}
 
         {modoCadastro && (
+          <div className="mb-4">
+            <label className="block text-sm font-medium mb-1" style={{color: '#2D3A47'}}>Nome</label>
+            <input
+              type="text"
+              placeholder="Seu nome"
+              value={nome}
+              onChange={e => setNome(e.target.value)}
+              className="w-full px-4 py-2 rounded-lg border outline-none"
+              style={{borderColor: '#F7C8D3'}}
+            />
+          </div>
+        )}
+
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-1" style={{color: '#2D3A47'}}>Email</label>
+          <input
+            type="email"
+            placeholder="seu@email.com"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            className="w-full px-4 py-2 rounded-lg border outline-none"
+            style={{borderColor: '#F7C8D3'}}
+          />
+        </div>
+
+        <div className="mb-6">
+          <label className="block text-sm font-medium mb-1" style={{color: '#2D3A47'}}>Senha</label>
+          <input
+            type="password"
+            placeholder="••••••••"
+            value={senha}
+            onChange={e => setSenha(e.target.value)}
+            className="w-full px-4 py-2 rounded-lg border outline-none"
+            style={{borderColor: '#F7C8D3'}}
+          />
+        </div>
+
+        <button
+          onClick={modoCadastro ? handleCadastro : handleLogin}
+          className="w-full py-2 rounded-lg font-semibold text-white transition hover:opacity-90"
+          style={{backgroundColor: '#B46A72'}}
+        >
+          {modoCadastro ? 'Cadastrar' : 'Entrar'}
+        </button>
+
+        <p className="text-center text-sm mt-4" style={{color: '#A8B58A'}}>
+          {modoCadastro ? 'Já tem conta?' : 'Não tem conta?'}{' '}
+          <span
+            className="cursor-pointer font-medium"
+            style={{color: '#B46A72'}}
+            onClick={() => { setModoCadastro(!modoCadastro); setErro(''); setSucesso('') }}
+          >
+            {modoCadastro ? 'Entrar' : 'Cadastre-se'}
+          </span>
+        </p>
+
+      </div>
+    </div>
+  )
+}
+
+export default Login
+EOF
