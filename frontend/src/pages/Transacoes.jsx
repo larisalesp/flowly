@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Plus, X } from 'lucide-react'
 import BottomNav from '../components/BottomNav'
 
-const API = 'http://192.168.0.20:8000'
+const API = 'https://flowly-production-aef8.up.railway.app'
 
 function Transacoes() {
   const [transacoes, setTransacoes] = useState([])

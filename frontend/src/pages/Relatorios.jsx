@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import BottomNav from '../components/BottomNav'
 
-const API = 'http://192.168.0.20:8000'
+const API = 'https://flowly-production-aef8.up.railway.app'
 
 function Relatorios() {
   const [resumo, setResumo] = useState(null)

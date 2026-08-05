@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const API = 'http://192.168.0.20:8000'
+const API = 'https://flowly-production-aef8.up.railway.app'
 
 function Login() {
   const [email, setEmail] = useState('')
